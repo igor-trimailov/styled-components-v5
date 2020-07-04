@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 
 import { Link as ReactRouterDomLink, useLocation } from 'react-router-dom'
+import { Toggle } from './Toggle'
 
 const HeaderWrapper = styled.header`
-  background-image: linear-gradient(to right, #f8049c, #fdd54f);
-  border-bottom: 3px solid #fdd54f;
+  background-image: linear-gradient(
+    to right,
+    ${({ theme }) => theme.primaryColor},
+    ${({ theme }) => theme.secondaryColor}
+  );
+  border-bottom: 3px solid ${({ theme }) => theme.secondaryColor};
   height: 60px;
   width: 100%;
   box-sizing: border-box;
@@ -24,8 +29,8 @@ const Menu = styled.nav`
   left: 0;
   padding: 8px;
   box-sizing: border-box;
-  border-bottom: 3px solid #fdd54f;
-  background: white;
+  border-bottom: 3px solid ${({ theme }) => theme.secondaryColor};
+  background: ${({ theme }) => theme.bodyBackgroundColor};
 
   @media (min-width: 768px) {
     display: flex;
@@ -56,7 +61,7 @@ const StyledLink = styled(Link)`
   text-align: center;
   box-sizing: border-box;
   margin: auto 0;
-  color: black;
+  color: ${({ theme }) => theme.bodyFontColor};
   font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
 `
 
@@ -67,7 +72,7 @@ const MobileMenuIcon = styled.div`
   padding: 5px;
   > div {
     height: 3px;
-    background: black;
+    background: ${({ theme }) => theme.bodyFontColor};
     margin: 5px 0;
     width: 100%;
   }
@@ -80,6 +85,11 @@ const MobileMenuIcon = styled.div`
 export function Header() {
   const { pathname } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const { id, setTheme } = useContext(ThemeContext)
+
+  console.log(id)
+
   return (
     <HeaderWrapper>
       <MobileMenuIcon onClick={() => setMenuOpen(!menuOpen)}>
@@ -94,6 +104,7 @@ export function Header() {
         <StyledLink to="/login" isActive={pathname === '/login'}>
           Login
         </StyledLink>
+        <Toggle isActive={id === 'dark'} onToggle={setTheme} />
       </Menu>
     </HeaderWrapper>
   )

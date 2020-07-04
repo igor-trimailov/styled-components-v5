@@ -1,9 +1,22 @@
 import styled, { css } from 'styled-components'
+import PropTypes from 'prop-types'
+
+const largeStyles = ({ large }) => {
+  if (large) {
+    return css`
+      padding: 10px;
+      font-size: 1.5em;
+    `
+  } else {
+    return null
+  }
+}
 
 const Button = styled.button`
   color: white;
   /* based on a property passed down, generate different styles */
-  background: ${({ secondary }) => (secondary ? 'black' : '#f8049c')};
+  background: ${({ secondary, theme }) =>
+    secondary ? theme.secondaryColor : theme.primaryColor};
   font-weight: bold;
   padding: 8px;
   border-radius: 4px;
@@ -29,6 +42,15 @@ const Button = styled.button`
           font-size: 1.5em;
         `
       : null}
+
+  /* or as an external function when it's too big */
+  ${largeStyles}
 `
+
+// good and safe way to document prop types
+Button.propTypes = {
+  large: PropTypes.bool,
+  secondary: PropTypes.bool,
+}
 
 export { Button }
